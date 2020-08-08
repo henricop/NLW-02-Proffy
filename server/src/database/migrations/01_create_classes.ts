@@ -7,7 +7,8 @@ export async function up(knex: Knex) {
     table.decimal('cost').notNullable();
 
     // relacionamento entre tabelas
-    table.integer('user_id')
+    table
+      .integer('user_id')
       .notNullable()
       .references('id')
       .inTable('users')

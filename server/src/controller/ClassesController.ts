@@ -1,4 +1,4 @@
-import { Request, Response, response } from 'express'
+import { Request, Response } from 'express'
 import db from '../database/connection';
 import convertHoursToMinutes from '../utils/convertHoursToMinutes';
 
@@ -10,7 +10,7 @@ interface ScheduleItem {
 
 
 export default class ClassesController {
-  async index(req: Request, res: Response) {
+  async index(req: Request, res: Response){
     // listagem terá 3 filtros
     const filters = req.query;
 
@@ -20,7 +20,7 @@ export default class ClassesController {
 
 
     if (!filters.week_day || !filters.subject || !filters.time) {
-      response.status(400).json({
+      res.status(400).json({
         error: "Missing filters to search classes"
       })
     }
@@ -36,15 +36,23 @@ export default class ClassesController {
           .whereRaw('`class_schedule`.`to` > ??',[timeInMinutes])
       })
       .where('classes.subject', '=', subject)
-      .join('users', 'classes.user_id', '=', 'user_id')
+      .join('users', 'classes.user_id', '=', 'users.id')
       .select(['classes.*','users.*'])
 
     return res.json(classes);
 
   }
 
-  async create(req: Request, res: Response) {
-    const { name, avatar, whatsapp, bio, subject, cost, schedule } = req.body;
+  async create(req: Request, res: Response){
+    const {
+       name, 
+       avatar, 
+       whatsapp, 
+       bio, 
+       subject, 
+       cost, 
+       schedule 
+      } = req.body;
 
     const trx = await db.transaction();
 
@@ -72,10 +80,11 @@ export default class ClassesController {
           from: convertHoursToMinutes(scheduleItem.from),
           to: convertHoursToMinutes(scheduleItem.to),
         };
-      })
+      });
 
       await trx('class_schedule').insert(classSchedule);
 
+      console.log(classSchedule);
       await trx.commit();
       return res.status(201).send();
 
