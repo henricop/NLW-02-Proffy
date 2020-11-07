@@ -1,4 +1,4 @@
-# NLW-02-Proffy
+# NLW-02-Proffy (Incompleto)
 ### Aplicação construída na segunda semana da NLW da Rocketseat
 ![](https://repository-images.githubusercontent.com/284814831/8cae6a00-d769-11ea-998b-bdc878327c43)
 
